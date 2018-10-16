@@ -1,8 +1,11 @@
 import Aruco, { Marker } from "js-aruco";
 import * as PropTypes from "prop-types";
 import * as React from "react";
+import "typeface-roboto-condensed";
+
 import Camera from "./Camera";
 import "./Detector.css";
+import MarkerMap from "./MarkerMap";
 
 const AR = Aruco.AR;
 
@@ -38,6 +41,14 @@ const overlap = (a: IMark, b: IMark) => {
 
   return width * height;
 };
+
+const onlyRegistered = (array: string[], mark: IMark) => {
+  if (mark.registered) {
+    array.push(mark.id);
+  }
+
+  return array;
+}
 
 const renderAndParseMarkers = function(
   this: CanvasRenderingContext2D,
@@ -79,7 +90,7 @@ const renderAndParseMarkers = function(
   this.strokeText(marker.id.toString(), reduced.minx, reduced.miny);
 
   return {
-    id: marker.id.toString(),
+    id: MarkerMap[parseInt(marker.id.toString(), 10)],
     registered: false,
     ...reduced
   };
@@ -121,6 +132,7 @@ export default class Detector extends React.Component {
     this.renderFrame = this.renderFrame.bind(this);
     this.setDimensions = this.setDimensions.bind(this);
     this.setCanvas = this.setCanvas.bind(this);
+    this.readAll = this.readAll.bind(this);
   }
 
   public setCanvas(canvas: HTMLCanvasElement | null) {
@@ -238,9 +250,14 @@ export default class Detector extends React.Component {
     this.currentMarkers = state;
   }
 
+  public readAll () {
+    const registered: string[] = this.currentMarkers.reduce(onlyRegistered, [] as string[]);
+    this.props.onAdded(registered, performance.now());
+  }
   public render() {
     return (
       <>
+        <button className={"readall"} onClick={this.readAll}> {"Leer todos"} </button>
         <Camera onFrame={this.renderFrame} onDimensions={this.setDimensions} />
         <canvas ref={this.setCanvas} />
       </>

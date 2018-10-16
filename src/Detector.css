@@ -7,3 +7,81 @@ canvas {
   height: 100%;
   object-fit: contain;
 }
+
+.readall {
+  overflow: hidden;
+  font-family: 'Roboto Condensed';
+  font-style: italic;
+  font-weight: bold;
+  position: absolute;
+  text-shadow: 0px 0px 20px rgba(255, 255, 255, 80%);
+  top: 16px;
+  left: 0px;
+  right: 0px;
+  margin: 0 auto;
+  padding: 8px 16px;
+  font-size: 18px;
+  text-transform: uppercase;
+  border-radius: 3px;
+  border: none transparent;
+  background: linear-gradient(60deg,#ffeb00,#ffb820,#ff8748,#ff5e69,#dd4582,#a43f8e,#623e8a,#0c3776);
+  background-size: 400% 400%;
+  transition: ease 0.3s;
+  background-position: 0% 50%;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 70%)
+}
+
+.readall:hover {
+  background-position: 100% 50%;
+  color: #FFF;
+  box-shadow: 0px 0px 30px rgba(0, 0, 0, 60%)
+}
+
+.readall::after {
+  position: absolute;
+  content: '';
+  display: block;
+  top: 50%;
+  left: 50%;
+
+  width: 120px;
+  height: 120px;
+  margin-left: -60px;
+  margin-top: -60px;
+  background: #FFF;
+  border-radius: 100%;
+  opacity: .6;
+
+  transform: scale(0);
+}
+
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+  }
+  20% {
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+}
+
+.readall:not(:active)::after {
+  animation: ripple 1s ease-out;
+}
+
+.readall:after {
+  visibility: hidden;
+}
+
+.readall:focus:after {
+  visibility: visible;
+}
+
+.readall:active :before, .readall:active ::before {
+  background-color: #6eb9f7;
+  background-size: 100%;
+  transition: background 0s;
+}

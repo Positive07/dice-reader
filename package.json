@@ -27,7 +27,8 @@
     "react": "^16.5.2",
     "react-aria-live": "^2.0.2",
     "react-dom": "^16.5.2",
-    "react-scripts-ts": "3.1.0"
+    "react-scripts-ts": "3.1.0",
+    "typeface-roboto-condensed": "0.0.54"
   },
   "homepage": "https://positive07.github.io/dice-reader",
   "scripts": {
