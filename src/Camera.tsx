@@ -1,25 +1,25 @@
 import * as PropTypes from "prop-types";
 import * as React from "react";
-import './Camera.css';
+import "./Camera.css";
 
 export interface IProps {
-  onDimensions: (width: number, height: number) => void,
-  onFrame: (video: HTMLVideoElement, delta: number) => void
+  onDimensions: (width: number, height: number) => void;
+  onFrame: (video: HTMLVideoElement, delta: number) => void;
 }
 
 type IUserMedia = (
   constraints: MediaStreamConstraints,
   resolve: (stream: MediaStream) => void,
   reject: (e: any) => void
-) => void
+) => void;
 
 const hasGetUserMedia = () => {
   return !!(
     (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) ||
-    (navigator as any).getUserMedia       as IUserMedia||
-    (navigator as any).webkitGetUserMedia as IUserMedia||
-    (navigator as any).mozGetUserMedia    as IUserMedia||
-    (navigator as any).msGetUserMedia     as IUserMedia
+    ((navigator as any).getUserMedia as IUserMedia) ||
+    ((navigator as any).webkitGetUserMedia as IUserMedia) ||
+    ((navigator as any).mozGetUserMedia as IUserMedia) ||
+    ((navigator as any).msGetUserMedia as IUserMedia)
   );
 };
 
@@ -29,7 +29,7 @@ const getUserMedia = (
   if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
     return navigator.mediaDevices.getUserMedia(constraints);
   } else {
-    const prefixed =
+    const prefixed: IUserMedia | undefined =
       (navigator as any).getUserMedia ||
       (navigator as any).mozGetUserMedia ||
       (navigator as any).webkitGetUserMedia ||
@@ -48,19 +48,22 @@ const getUserMedia = (
 };
 
 export default class Camera extends React.Component {
-
   public static defaultProps = {
-    onDimensions: (width: number, height: number) => { return; },
-    onFrame: (video: HTMLVideoElement, delta: number) => { return; }
-  }
+    onDimensions: (width: number, height: number) => {
+      return;
+    },
+    onFrame: (video: HTMLVideoElement, delta: number) => {
+      return;
+    }
+  };
 
   public static propTypes = {
     onDimensions: PropTypes.func,
     onFrame: PropTypes.func
-  }
+  };
 
-  public static mountedInstances: Camera[] = []
-  public static userMediaRequested = false
+  public static mountedInstances: Camera[] = [];
+  public static userMediaRequested = false;
 
   public state: {
     hasUserMedia: boolean;
@@ -72,8 +75,6 @@ export default class Camera extends React.Component {
   public stream: MediaStream;
   public rafId: number;
   public isActive: boolean;
-  public lastInvocationMs: DOMHighResTimeStamp;
-
   constructor(props: IProps, context?: any) {
     super(props, context);
     this.state = {
@@ -103,7 +104,6 @@ export default class Camera extends React.Component {
       this.state.hasUserMedia &&
       this.stream
     ) {
-
       if (this.stream.getVideoTracks && this.stream.getAudioTracks) {
         this.stream.getVideoTracks().map(track => track.stop());
         this.stream.getAudioTracks().map(track => track.stop());
@@ -124,13 +124,11 @@ export default class Camera extends React.Component {
       const stream = await getUserMedia({
         audio: false,
         video: {
-          facingMode: {ideal: "environment"},         
+          facingMode: { ideal: "environment" }
         }
       });
 
-      Camera.mountedInstances.forEach(instance =>
-        instance.onUserMedia(stream)
-      );
+      Camera.mountedInstances.forEach(instance => instance.onUserMedia(stream));
     } catch (e) {
       Camera.mountedInstances.forEach(instance => instance.onUserMediaError(e));
     }
@@ -157,9 +155,9 @@ export default class Camera extends React.Component {
         src: window.URL.createObjectURL(stream)
       });
     }
-  
+
     this.video.onloadedmetadata = () => this.metadataloaded();
-    this.startAnimation()
+    this.startAnimation();
   }
 
   public endAnimation() {
@@ -175,35 +173,34 @@ export default class Camera extends React.Component {
     }
   }
 
-  public loop (time: DOMHighResTimeStamp) {
-    if (!this.isActive || !this.video ) { return; }
-
-    let delta = 0;
-    if (this.lastInvocationMs) {
-      delta = time - this.lastInvocationMs
+  public loop(time: DOMHighResTimeStamp) {
+    if (!this.isActive || !this.video) {
+      return;
     }
-  
-    this.lastInvocationMs = time
 
-    if (this.video.readyState === this.video.HAVE_ENOUGH_DATA){
-      this.props.onFrame(this.video, delta)
+    if (this.video.readyState === this.video.HAVE_ENOUGH_DATA) {
+      this.props.onFrame(this.video, time);
     }
 
     this.rafId = requestAnimationFrame(t => this.loop(t));
   }
 
-  public metadataloaded () {
+  public metadataloaded() {
     if (this.video && this.video.videoHeight && this.video.videoWidth) {
       this.props.onDimensions(this.video.videoWidth, this.video.videoHeight);
     }
   }
 
   public render() {
-    return <video
-      autoPlay={true}
-      playsInline={true}
-      src={this.state.src}
-      ref={video => { this.video = video; }}
-    />
+    return (
+      <video
+        autoPlay={true}
+        playsInline={true}
+        src={this.state.src}
+        ref={video => {
+          this.video = video;
+        }}
+      />
+    );
   }
 }

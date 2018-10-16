@@ -1,23 +1,22 @@
-declare module 'js-aruco' {
-
+declare module "js-aruco" {
   export interface Corner {
-    x: number,
-    y: number
+    x: number;
+    y: number;
   }
 
   export interface Marker {
-    corners: Corner[],
-    id: string
+    corners: Corner[];
+    id: number;
   }
 
   export class ARDetector {
-    detect (data: ImageData): Marker[]
+    detect(data: ImageData): Marker[];
   }
 
   const module: {
     AR: {
-      Detector: typeof ARDetector,
-    }
+      Detector: typeof ARDetector;
+    };
   };
 
   export default module;
