@@ -1,7 +1,7 @@
 import * as React from "react";
-import { LiveAnnouncer, LiveMessenger } from "react-aria-live";
 import "./App.css";
 import Detector from "./Detector";
+import { LiveAnnouncer, LiveMessenger } from "./react-aria-live";
 
 // import logo from './logo.svg';
 

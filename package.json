@@ -25,7 +25,6 @@
   "dependencies": {
     "js-aruco": "^0.1.0",
     "react": "^16.5.2",
-    "react-aria-live": "^2.0.2",
     "react-dom": "^16.5.2",
     "react-scripts-ts": "3.1.0",
     "typeface-roboto-condensed": "0.0.54"
@@ -44,6 +43,7 @@
     "@types/node": "^10.11.7",
     "@types/react": "^16.4.16",
     "@types/react-dom": "^16.0.9",
+    "@types/uuid": "^3.4.4",
     "gh-pages": "^2.0.1",
     "typescript": "^3.1.3"
   }
