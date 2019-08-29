@@ -45,6 +45,6 @@
     "@types/react-dom": "^16.8.4",
     "@types/uuid": "^3.4.5",
     "gh-pages": "^2.0.1",
-    "typescript": "^3.5.2"
+    "typescript": "^3.6.2"
   }
 }
